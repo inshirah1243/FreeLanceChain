@@ -120,27 +120,34 @@ FreelanceChain/
 
 Below are sample outputs captured from the application during runtime.
 
-![Prototype](Diagrams/Prototype.jpg)
+![MetaMask](Diagrams/MetaMask.png)
 
 ---
-![GUI](Diagrams/GUI.png)
+![Landing_Page](Diagrams/Landing_Page.png)
 
 ---
-![Arduino](Diagrams/arduino.png)
+![Client_Dashboard](Diagrams/Client_Dashboard.png)
 
 ---
-![Flask](Diagrams/Flask.png)
+![FreeLancer_dashboard](Diagrams/FreeLancer_dashboard.png)
 
 ---
-![Prediction 1](Diagrams/low.png)
+![proposal_review](Diagrams/proposal_review.png)
 
 ---
-![Prediction 2](Diagrams/mid.png)
+![Work_Submission](Diagrams/Work_Submission.png)
 
 ---
-![Prediction 3](Diagrams/high.png)
+![submit](Diagrams/submit.png)
 
 ---
+![submission_review](Diagrams/submission_review.png)
+
+---
+![Client_Statistics](Diagrams/Client_Statistics.png)
+
+---
+![Freelancer_Statistics](Diagrams/Freelancer_Statistics.png)
 
 ---
 
