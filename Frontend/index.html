@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeLanceChain - Decentralized Freelancing</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+    /* layout tweaks for new landing page */
+    body { margin: 0; }
+    .landing-container { padding-top: 70px; }
+    .navbar {
+        position: fixed; top: 0; left: 0; right: 0;
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 20px;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+    }
+    .navbar .logo { font-size: 1.5rem; font-weight: bold; color: white; }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { color: white; text-decoration: none; font-weight: 500; }
+    .nav-actions { display: flex; gap: 0.75rem; }
+    .hero { text-align: center; padding: 120px 20px 80px; color: white; }
+    .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; }
+    .hero-subtitle { font-size: 1.2rem; max-width: 800px; margin: 0 auto; }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+    .how-it-works, .features, .cta { padding: 80px 20px; text-align: center; color: #fff; }
+    .steps-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); margin-top: 40px; }
+    .step-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 20px; border-radius: 12px; }
+    .step-icon { font-size: 36px; margin-bottom: 10px; }
+    .features .features-grid { margin-top: 40px; }
+    .cta h2 { margin-bottom: 20px; }
+    .landing-footer { padding: 40px 20px; text-align: center; background: rgba(0,0,0,0.1); color: #fff; }
+    .landing-footer a { color: #fff; text-decoration: none; margin: 0 5px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="landing-container">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">🚀 FreeLanceChain</div>
+        <div class="nav-links">
+            <a href="#hire">Hire Freelancers</a>
+            <a href="#find">Find Work</a>
+            <a href="#howitworks">How It Works</a>
+            <a href="#about">About</a>
+        </div>
+        <div class="nav-actions">
+            <!--<button onclick="goToClient()" class="nav-btn">Log In</button>
+            <button class="secondary">Sign Up</button>
+            <button onclick="goToClient()" class="primary">Post a Project</button> -->
+            <button onclick="openLogin('client')" class="nav-btn">Log In</button>
+            <button onclick="openSignup()" class="secondary">Sign Up</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1>FreeLanceChain</h1>
+        <p class="hero-subtitle">A decentralized freelancing marketplace where clients hire skilled freelancers and payments are handled securely without intermediaries.</p>
+        <div class="hero-buttons">
+            <button onclick="goToClient()" class="primary">Hire a Freelancer</button>
+            <button onclick="promptFreelancerLogin()" class="secondary">Find Work</button>
+        </div>
+    </header>
+
+    <!-- How It Works -->
+    <section id="howitworks" class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-icon">📝</div>
+                <h3>Post a Job</h3>
+                <p>Clients describe their project and requirements.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">🤝</div>
+                <h3>Hire a Freelancer</h3>
+                <p>Freelancers submit proposals and clients choose the best match.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">🔒</div>
+                <h3>Secure Payment</h3>
+                <p>Payment is held safely and released after work approval.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="about">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h4>Trust & Transparency</h4>
+                <p>A decentralized system ensuring fair collaboration between clients and freelancers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h4>Secure Payments</h4>
+                <p>Payments are protected and released only after work approval.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h4>Global Talent</h4>
+                <p>Connect with skilled freelancers from anywhere in the world.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h4>Real-Time Tracking</h4>
+                <p>Track project progress and payment status easily.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta">
+        <h2>Start hiring or start earning today.</h2>
+        <div class="hero-buttons">
+            <button onclick="goToClient()" class="primary">Hire a Freelancer</button>
+            <button onclick="promptFreelancerLogin()" class="secondary">Find Work</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <p>© 2026 FreeLanceChain. All rights reserved.</p>
+        <p><a href="#">About</a> | <a href="#">Privacy</a> | <a href="#">Terms</a></p>
+    </footer>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close" onclick="closeLoginModal()">&times;</span>
+        <h2>Login to FreeLanceChain</h2>
+        <p>Connect your wallet to login</p>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            
+            <button onclick="confirmLogin()" class="primary" style="flex: 1;">Connect Wallet</button>
+            <button onclick="closeLoginModal()" class="secondary" style="flex: 1;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Signup Modal -->
+<div id="signupModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close" onclick="closeSignupModal()">&times;</span>
+        <h2>Sign Up for FreeLanceChain</h2>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px;">I am a:</label>
+            <select id="signupRole" class="form-input">
+                <option value="client">Client (Hiring freelancers)</option>
+                <option value="freelancer">Freelancer (Looking for work)</option>
+            </select>
+        </div>
+        <input type="text" id="signupNameInput" placeholder="Your full name" class="form-input">
+        <p style="font-size: 12px; color: #666; margin-top: 10px;">This will be your professional identity on FreeLanceChain</p>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button onclick="confirmSignup()" class="primary" style="flex: 1;">Connect Wallet & Sign Up</button>
+            <button onclick="closeSignupModal()" class="secondary" style="flex: 1;">Cancel</button>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

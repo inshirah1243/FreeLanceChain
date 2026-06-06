@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard - FreeLanceChain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+    <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+        <h2 style="margin: 0;">👔 Client Dashboard</h2>
+        <div style="display:flex; gap:15px; align-items:center;">
+            <span id="jobCount" class="badge">0</span>
+            <button onclick="location.href='index.html'" class="nav-btn">← Home</button>
+        </div>
+    </div>
+</div>
+
+<div class="layout">
+
+<div class="sidebar">
+    <a onclick="showClient('post',event)" class="sidebar-item active">📝 Post Job</a>
+    <a onclick="showClient('proposals',event)" class="sidebar-item">💼 Review Proposals</a>
+    <a onclick="showClient('manage',event)" class="sidebar-item">📊 Manage Jobs</a>
+    <a onclick="showClient('reviewSubmissionsSection',event)" class="sidebar-item">📦 Review Submissions</a>
+    <a onclick="showClient('stats',event)" class="sidebar-item">📈 Statistics</a>
+    <a onclick="showClient('timeline',event)" class="sidebar-item">📅 Timeline</a>
+</div>
+
+<div class="main">
+
+<!-- Post Job Section -->
+<div id="post" class="section">
+    <h3>📝 Post New Job</h3>
+    <div class="form-container">
+        <div class="form-group">
+            <label>Job Title *</label>
+            <input id="title" type="text" placeholder="e.g., Build a React Dashboard" class="form-input" maxlength="100">
+            <span class="char-count"><span id="titleCount">0</span>/100</span>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="category" class="form-input" onchange="handleCategoryChange()">
+                    <option value="">Select category</option>
+                    <option value="web">Web Development</option>
+                    <option value="mobile">Mobile App</option>
+                    <option value="design">Design</option>
+                    <option value="writing">Writing</option>
+                    <option value="other">Other</option>
+                </select>
+
+<input id="customCategory" type="text" placeholder="Enter custom category"
+class="form-input" style="margin-top:10px; display:none;">
+            </div>
+            <div class="form-group">
+                <label>Budget (ETH) *</label>
+                <input id="budget" type="number" placeholder="0.01" class="form-input" step="0.0001" min="0.0001" >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Description *</label>
+            <textarea id="desc" placeholder="Describe what you need... Include any specific requirements or deliverables." class="form-input" maxlength="1000"></textarea>
+            <span class="char-count"><span id="descCount">0</span>/1000</span>
+        </div>
+
+        <div class="form-group">
+            <label>Skills Required (comma-separated)</label>
+            <input id="skills" type="text" placeholder="e.g., React, Node.js, MongoDB" class="form-input">
+        </div>
+
+        <div class="form-group">
+            <label>Timeline (days) *</label>
+            <select id="timeline" class="form-input" onchange="handleTimelineChange()">
+                <option value="7">1 Week</option>
+                <option value="14">2 Weeks</option>
+                <option value="30">1 Month</option>
+                <option value="60">2 Months</option>
+                <option value="custom">Custom</option>
+            </select>
+
+<input id="customTimeline" type="number" placeholder="Enter days"
+class="form-input" style="margin-top:10px; display:none;" min="1">
+        </div>
+
+        <button onclick="validateAndPostJob()" class="primary" style="width:100%; margin-top:20px;">✅ Post Job</button>
+    </div>
+</div>
+
+<!-- Review Proposals Section -->
+<div id="proposals" class="section hidden">
+    <h3>💼 Review Proposals</h3>
+    <p style="color: #666; margin-bottom: 20px;">View all proposals from freelancers for your open jobs</p>
+    <div id="proposalsContainer" class="grid"></div>
+    <div id="emptyProposals" class="empty-msg">No proposals received yet</div>
+</div>
+
+<!-- Manage Jobs Section -->
+<div id="manage" class="section hidden">
+    <h3>📊 Job Management</h3>
+    
+    <div class="filter-bar">
+        <input type="text" id="searchJobs" placeholder="🔍 Search jobs..." class="form-input" style="flex:1;" onkeyup="filterJobs()">
+        <select id="statusFilter" class="form-input" onchange="filterJobs()" style="flex:0; min-width:150px;">
+            <option value="">All Status</option>
+            <option value="Open">Open</option>
+            <option value="Selected">Selected</option>
+            <option value="Escrow Locked">Escrow Locked</option>
+            <option value="Work Submitted">Work Submitted</option>
+            <option value="Payment Released">Completed</option>
+        </select>
+    </div>
+
+    <div id="clientJobs" class="grid"></div>
+    <div id="emptyMsg" class="empty-msg">No jobs posted yet</div>
+</div>
+
+<!-- Statistics Section -->
+<div id="stats" class="section hidden">
+    <h3>📈 Dashboard Statistics</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <p class="stat-value" id="totalJobs">0</p>
+            <p class="stat-label">Total Jobs</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="selectedJobs">0</p>
+            <p class="stat-label">In Progress</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="completedJobs">0</p>
+            <p class="stat-label">Completed</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="totalBudget">$0</p>
+            <p class="stat-label">Total Spent</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="activeProposals">0</p>
+            <p class="stat-label">Proposals</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="escrowLocked">$0</p>
+            <p class="stat-label">In Escrow</p>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 30px;">Job Breakdown</h3>
+    <div class="breakdown-chart">
+        <div class="breakdown-item">
+            <div class="breakdown-label">Opening</div>
+            <div class="breakdown-bar">
+                <div class="breakdown-fill" id="breakOpen" style="width: 0%; background: #3b82f6;"></div>
+            </div>
+            <span id="breakOpenCount">0</span>
+        </div>
+        <div class="breakdown-item">
+            <div class="breakdown-label">In Progress</div>
+            <div class="breakdown-bar">
+                <div class="breakdown-fill" id="breakProgress" style="width: 0%; background: #f59e0b;"></div>
+            </div>
+            <span id="breakProgressCount">0</span>
+        </div>
+        <div class="breakdown-item">
+            <div class="breakdown-label">Completed</div>
+            <div class="breakdown-bar">
+                <div class="breakdown-fill" id="breakComplete" style="width: 0%; background: #10b981;"></div>
+            </div>
+            <span id="breakCompleteCount">0</span>
+        </div>
+    </div>
+</div>
+
+<!-- Review Submissions Section -->
+<div id="reviewSubmissionsSection" class="section hidden">
+    <h3>📦 Review Submissions</h3>
+    <p style="color: #666; margin-bottom: 20px;">Work submissions sent by freelancers</p>
+    <div id="reviewSubmissionsList" class="grid"></div>
+    <div id="emptySubmissions" class="empty-msg">No submissions yet</div>
+</div>
+
+<!-- Timeline Section -->
+<div id="timeline" class="section">
+    <h3>📅 Job Timeline</h3>
+    <div id="timelineContent" class="timeline-container"></div>
+    <div id="emptyTimeline" class="empty-msg">No jobs to display</div>
+</div>
+
+</div>
+</div>
+
+<!-- Job Details Modal -->
+<div id="jobDetailsModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close" onclick="closeJobModal()">&times;</span>
+        <h2 id="modalTitle"></h2>
+        
+        <div class="modal-body">
+            <div class="modal-info-grid">
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span id="modalStatus" class="status-badge"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Budget</span>
+                    <span class="info-value">$<span id="modalBudget"></span></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Category</span>
+                    <span class="info-value" id="modalCategory"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Timeline</span>
+                    <span class="info-value" id="modalTimeline"></span>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p id="modalDesc" class="modal-desc"></p>
+            </div>
+
+            <div class="modal-section" id="skillsSection" style="display:none;">
+                <h4>Required Skills</h4>
+                <div id="modalSkills" class="skills-tags"></div>
+            </div>
+
+            <div class="modal-section" id="proposalsSection" style="display:none;">
+                <h4>Proposals Received</h4>
+                <div id="modalProposals" class="proposals-list"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="actionBtn1" onclick="executeModalAction1()" class="primary" style="display:none;"></button>
+                <button id="actionBtn2" onclick="executeModalAction2()" class="secondary" style="display:none;"></button>
+                <button onclick="closeJobModal()" class="secondary">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script src="script.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // 🔐 AUTH CHECK (ADD THIS FIRST)
+    const savedAccount = localStorage.getItem("currentAccount");
+
+    if (!savedAccount) {
+        alert("Please login first");
+        window.location.href = "index.html";
+        return;
+    }
+
+    // 🔥 sync wallet (VERY IMPORTANT)
+    currentAccount = savedAccount;
+
+    // ✏️ Existing logic
+    document.getElementById('title').addEventListener('input', function() {
+        document.getElementById('titleCount').textContent = this.value.length;
+    });
+    
+    document.getElementById('desc').addEventListener('input', function() {
+        document.getElementById('descCount').textContent = this.value.length;
+    });
+
+    updateJobCount();
+});
+
+function updateJobCount() {
+    let jobs = getJobs();
+    document.getElementById('jobCount').textContent = jobs.length;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancer Dashboard - FreeLanceChain</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+    <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+        <h2 style="margin: 0;">👨‍💻 Freelancer Dashboard</h2>
+        <div style="display:flex; gap:15px; align-items:center;">
+            <span id="freelancerName" style="color:white; font-weight:600;"></span>
+            <span class="badge" id="earningsDisplay">$0</span>
+            <button onclick="location.href='index.html'" class="nav-btn">← Home</button>
+            <div class="wallet-connect">
+                <button onclick="logout()">Logout</button>
+                <button onclick="connectWallet()">🔗 Connect Wallet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="layout">
+
+<div class="sidebar">
+    <a onclick="showFreelancer('browse')" class="sidebar-item active">🔍 Browse Jobs</a>
+    <a onclick="showFreelancer('proposals')" class="sidebar-item">📋 My Proposals</a>
+    <a onclick="showFreelancer('work')" class="sidebar-item">⚙️ Active Work</a>
+    <a onclick="showFreelancer('completed')" class="sidebar-item">✅ Completed</a>
+    <a onclick="showFreelancer('stats')" class="sidebar-item">📈 Statistics</a>
+</div>
+
+<div class="main">
+
+<!-- Browse Available Jobs -->
+<div id="browse" class="section">
+    <h3>🔍 Available Jobs</h3>
+    
+    <div class="filter-bar">
+        <input type="text" id="searchBox" placeholder="Search jobs..." class="form-input" style="flex:1;" onkeyup="filterBrowseJobs()">
+        <select id="categoryFilter" class="form-input" onchange="filterBrowseJobs()" style="flex:0; min-width:150px;">
+            <option value="">All Categories</option>
+            <option value="web">Web Development</option>
+            <option value="mobile">Mobile App</option>
+            <option value="design">Design</option>
+            <option value="writing">Writing</option>
+            <option value="writing">others</option>
+        </select>
+        <select id="budgetFilter" class="form-input" onchange="filterBrowseJobs()" style="flex:0; min-width:150px;">
+            <option value="">All Budgets</option>
+            <option value="0-0.001">0 - 0.001 ETH</option>
+            <option value="0.001-0.005">0.001 - 0.005 ETH</option>
+            <option value="0.005-0.01">0.005 - 0.01 ETH</option>
+            <option value="0.01-1">0.01+ ETH</option>
+        </select>
+    </div>
+
+    <div id="jobList" class="grid"></div>
+    <div id="emptyJobs" class="empty-msg">No available jobs at the moment</div>
+</div>
+
+<!-- My Proposals -->
+<div id="proposals" class="section hidden">
+    <h3>📋 My Proposals</h3>
+    <div class="proposal-stats">
+        <div class="proposal-stat">
+            <span class="stat-number" id="proposalCount">0</span>
+            <span class="stat-text">Total Proposals</span>
+        </div>
+        <div class="proposal-stat">
+            <span class="stat-number" id="pendingCount">0</span>
+            <span class="stat-text">Pending</span>
+        </div>
+        <div class="proposal-stat">
+            <span class="stat-number" id="selectedCount">0</span>
+            <span class="stat-text">Selected</span>
+        </div>
+    </div>
+    <div id="myApplications" class="grid"></div>
+    <div id="emptyApply" class="empty-msg">You haven't applied to any jobs yet</div>
+</div>
+
+<!-- Active Work -->
+<div id="work" class="section hidden">
+    <h3>⚙️ Active Work</h3>
+    <div class="work-stats">
+        <div class="work-stat">
+            <div class="stat-indicator" style="background:#f59e0b;"></div>
+            <span id="activeCount">0</span> jobs in progress
+        </div>
+        <div class="work-stat">
+            <div class="stat-indicator" style="background:#ec4899;"></div>
+            <span id="reviewCount">0</span> under review
+        </div>
+    </div>
+    <div id="activeWork" class="grid"></div>
+    <div id="emptyWork" class="empty-msg">No active work right now</div>
+</div>
+
+<!-- Completed Jobs -->
+<div id="completed" class="section hidden">
+    <h3>✅ Completed Jobs</h3>
+    <div id="completedWork" class="grid"></div>
+    <div id="emptyCompleted" class="empty-msg">No completed jobs yet</div>
+</div>
+
+<!-- Statistics -->
+<div id="stats" class="section hidden">
+    <h3>📈 My Statistics</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <p class="stat-value" id="appliedJobs">0</p>
+            <p class="stat-label">Applied</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="selectedCount2">0</p>
+            <p class="stat-label">Selected</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="completedCount">0</p>
+            <p class="stat-label">Completed</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="earnedAmount">$0</p>
+            <p class="stat-label">Earned</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="successRate">0%</p>
+            <p class="stat-label">Success Rate</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-value" id="avgRating">4.5★</p>
+            <p class="stat-label">Avg Rating</p>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 30px;">Performance Overview</h3>
+    <div class="performance-chart">
+        <div class="performance-row">
+            <div class="performance-label">Proposal Success</div>
+            <div class="performance-bar">
+                <div class="performance-fill" id="perfProposal"></div>
+            </div>
+            <span id="perfProposalText">0%</span>
+        </div>
+        <div class="performance-row">
+            <div class="performance-label">Completion Rate</div>
+            <div class="performance-bar">
+                <div class="performance-fill" id="perfCompletion"></div>
+            </div>
+            <span id="perfCompletionText">0%</span>
+        </div>
+        <div class="performance-row">
+            <div class="performance-label">Client Satisfaction</div>
+            <div class="performance-bar">
+                <div class="performance-fill" id="perfSatisfaction"></div>
+            </div>
+            <span id="perfSatisfactionText">0%</span>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- Job Details Modal -->
+<div id="jobModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle"></h2>
+        
+        <div class="modal-body">
+            <div class="modal-info-grid">
+                <div class="info-item">
+                    <span class="info-label">Budget</span>
+                    <span class="info-value">$<span id="modalBudget"></span></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span class="info-value" id="modalStatus"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Category</span>
+                    <span class="info-value" id="modalCategory"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Timeline</span>
+                    <span class="info-value" id="modalTimeline"></span>
+                </div>
+            </div>
+
+            <div class="modal-section">
+                <h4>Description</h4>
+                <p id="modalDesc"></p>
+            </div>
+
+            <div class="modal-section" id="skillsSection" style="display:none;">
+                <h4>Required Skills</h4>
+                <div id="modalSkills" class="skills-tags"></div>
+            </div>
+
+            <div class="modal-section" id="workDetailsSection" style="display:none;">
+                <h4>Work Submitted</h4>
+                <p id="workDetails" class="work-details"></p>
+                <p style="font-size:12px; color:#999; margin-top:10px;" id="workSubmittedTime"></p>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button id="applyBtn" onclick="applyJobFromModal()" class="primary" style="display:none;">📨 Apply For This Job</button>
+            <button id="submitBtn" onclick="submitWorkFromModal()" class="primary" style="display:none;">⬆️ Submit Work</button>
+            <button onclick="closeModal()" class="secondary">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Work Submission Modal -->
+<div id="submitWorkModal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close" onclick="closeSubmitModal()">&times;</span>
+        <h2>Submit Your Work</h2>
+        
+        <div class="form-group">
+            <label>Work Description/Details *</label>
+            <textarea id="workInput" placeholder="Describe your completed work, include links, files, or any relevant information..." class="form-input" rows="6"></textarea>
+            <span class="char-count"><span id="workCount">0</span>/2000</span>
+        </div>
+
+        <div class="form-group">
+            <label>Attachments (GitHub link, portfolio, etc.)</label>
+            <input id="attachmentInput" type="url" placeholder="https://github.com/your-repo" class="form-input">
+        </div>
+
+        <div style="background:#f0f9ff; border-left:4px solid #3b82f6; padding:12px; border-radius:4px; margin:15px 0;">
+            <p style="margin:0; font-size:13px; color:#333;">
+                <strong>💡 Tip:</strong> Be detailed and professional. Include links to your work, screenshot descriptions, or any deliverables.
+            </p>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="confirmWorkSubmission()" class="primary" style="flex:1;">Submit Work</button>
+            <button onclick="closeSubmitModal()" class="secondary" style="flex:1;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script src="script.js"></script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', async function() {
+    //await connectWallet();
+    const freelancer = localStorage.getItem('currentFreelancer');
+    const savedAccount = localStorage.getItem('currentAccount');
+
+     if (!freelancer || !savedAccount) {
+        alert('Please login first');
+        location.href = 'index.html';
+        return;
+    }
+        currentAccount = savedAccount;
+    document.getElementById('freelancerName').textContent = '👤 ' + freelancer;
+    // Character count for work input
+    /*document.getElementById('workInput').addEventListener('input', function() {
+        document.getElementById('workCount').textContent = this.value.length;
+    }); */
+    displayBrowseJobs();
+    displayFreelancerStats();
+    checkFreelancerPayments();
+
+});
+
+function testWallet(){
+    console.log("button clicked");
+    connectWallet();
+}
+function closeSubmitModal() {
+    document.getElementById('submitWorkModal').classList.add('hidden');
+    document.getElementById('workInput').value = '';
+    document.getElementById('attachmentInput').value = '';
+    document.getElementById('workCount').textContent = '0';
+}
+</script>
+</body>
+</html>
